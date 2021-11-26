@@ -1,4 +1,4 @@
-### Base request to https://www.spore.com/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr ###
+### Full request to https://www.spore.com/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr ###
 
 
 # Header
@@ -13,13 +13,13 @@ c0-id=0  # Id of c0
 
 ############### c0-param0 ###############
 # Adv
-c0-e1=number:1  # Search result start index
+c0-e1=number:1
 
 # Search text
 c0-e2=string:test
 
 # Max results
-c0-e3=number:20  # Search result lenght
+c0-e3=number:20
 
 # Fields
 c0-e5=string:name
