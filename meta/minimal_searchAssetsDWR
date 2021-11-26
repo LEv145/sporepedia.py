@@ -1,0 +1,13 @@
+callCount=1
+scriptSessionId=EEC7AACA9B835CB826C147F3784E3FA2284
+c0-scriptName=searchService
+c0-methodName=searchAssetsDWR
+c0-id=0
+
+c0-fields=[name,author,description]
+c0-functions=[CREATURE,CIV_CREATURE,CITY_HALL,INDUSTRY,UFO,ADV_ATTACK,ADV_DEFEND,ADV_PUZZLE,ADV_SOCIALIZE,ADV_TEMPLATE]
+c0-purposes=[MILITARY,CULTURAL]
+c0-modes=[]
+
+c0-param0=Object_Object:{adv:1, searchText:test, maxResults:20, fields:reference:c0-fields, functions:reference:c0-functions, purposes:reference:c0-purposes, modes:reference:c0-modes, filter:reference:NONE}
+batchId=1
