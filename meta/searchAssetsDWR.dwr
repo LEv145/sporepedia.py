@@ -1,0 +1,123 @@
+### Base request to https://www.spore.com/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr ###
+
+
+# Header
+callCount=1  # Call count
+page=/sporepedia  # Page
+httpSessionId=8UYQ3BS0E1KVPMXWJIORT2UYMPOLAQX  # Http session id
+scriptSessionId=OaOwHXEnsiOWXNnc2pl9fZFGcHW6mrSNdBX  # Script session id
+
+c0-scriptName=searchService  # Name of c0-script
+c0-methodName=searchAssetsDWR  # Name of c0-method
+c0-id=0  # Id of c0
+
+############### c0-param0 ###############
+# Adv
+c0-e1=number:1  # Search result start index
+
+# Search text
+c0-e2=string:test
+
+# Max results
+c0-e3=number:20  # Search result lenght
+
+# Fields
+c0-e5=string:name
+c0-e6=string:author
+c0-e7=string:tags
+c0-e8=string:description
+
+c0-e4=Array:[
+    reference:c0-e5,
+    reference:c0-e6,
+    reference:c0-e7,
+    reference:c0-e8
+]
+
+# Functions
+c0-e10=string:CREATURE
+c0-e11=string:TRIBE_CREATURE
+c0-e12=string:CIV_CREATURE
+c0-e13=string:SPACE_CREATURE
+c0-e14=string:ADVENTURE_CREATURE
+c0-e15=string:CITY_HALL
+c0-e16=string:HOUSE
+c0-e17=string:INDUSTRY
+c0-e18=string:ENTERTAINMENT
+c0-e19=string:UFO
+c0-e20=string:ADV_ATTACK
+c0-e21=string:ADV_COLLECT
+c0-e22=string:ADV_DEFEND
+c0-e23=string:ADV_EXPLORE
+c0-e24=string:ADV_UNSET
+c0-e25=string:ADV_PUZZLE
+c0-e26=string:ADV_QUEST
+c0-e27=string:ADV_SOCIALIZE
+c0-e28=string:ADV_STORY
+c0-e29=string:ADV_TEMPLATE
+
+c0-e9=Array:[
+    reference:c0-e10,
+    reference:c0-e11,
+    reference:c0-e12,
+    reference:c0-e13,
+    reference:c0-e14,
+    reference:c0-e15,
+    reference:c0-e16,
+    reference:c0-e17,
+    reference:c0-e18,
+    reference:c0-e19,
+    reference:c0-e20,
+    reference:c0-e21,
+    reference:c0-e22,
+    reference:c0-e23,
+    reference:c0-e24,
+    reference:c0-e25,
+    reference:c0-e26,
+    reference:c0-e27,
+    reference:c0-e28,
+    reference:c0-e29
+]
+
+# Models
+c0-e31=string:LAND
+c0-e32=string:AIR
+c0-e33=string:WATER
+
+c0-e30=Array:[
+    reference:c0-e31,
+    reference:c0-e32,
+    reference:c0-e33
+]
+
+# Purposes
+c0-e35=string:MILITARY
+c0-e36=string:ECONOMIC
+c0-e37=string:CULTURAL
+c0-e38=string:COLONY
+
+c0-e34=Array:[
+    reference:c0-e35,
+    reference:c0-e36,
+    reference:c0-e37,
+    reference:c0-e38
+]
+
+# Filter
+c0-e39=string:MOST_POPULAR
+
+
+c0-param0=Object_Object:{
+    adv:reference:c0-e1,
+    searchText:reference:c0-e2,
+    maxResults:reference:c0-e3,
+    fields:reference:c0-e4,
+    functions:reference:c0-e9,
+    modes:reference:c0-e30,
+    purposes:reference:c0-e34,
+    filter:reference:c0-e39
+}
+############### c0-param0 ###############
+
+# Batch id
+batchId=4

@@ -30,6 +30,10 @@ class APIClient():
         await self.create(session)
         return self
 
+    # Methods
+
+    #########
+
     async def close(self) -> None:
         if self._session is None:
             raise ValueError("The session does not exist")
