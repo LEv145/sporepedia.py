@@ -25,13 +25,13 @@ class FieldsSearchParams(ABCSearchParam):
         params = []
 
         if self.is_name:
-            params.append("NAME")
+            params.append("name")
         if self.is_author:
-            params.append("AUTHOR")
+            params.append("author")
         if self.is_tags:
-            params.append("TAGS")
+            params.append("tags")
         if self.is_description:
-            params.append("DESCRIPTION")
+            params.append("description")
 
         return f"[{','.join(params)}]"
 
