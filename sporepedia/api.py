@@ -181,7 +181,7 @@ class APIClient():
         params: SearchParams,
         filter: str,  # TODO: Enum
         batch_id: int = 1,
-        adv: int = 1
+        adv: int = 1,
     ):
         data = (
             "callCount=1\n"
@@ -211,7 +211,7 @@ class APIClient():
         )
         responce = await self._request(
             f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
-            data=data
+            data=data,
         )
         return responce
 
@@ -235,6 +235,6 @@ class APIClient():
         self,
         _exception_type: Type[BaseException],
         _exception: BaseException,
-        _traceback: TracebackType
+        _traceback: TracebackType,
     ) -> None:
         await self.close()
