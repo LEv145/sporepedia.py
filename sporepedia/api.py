@@ -15,14 +15,14 @@ class ABCSearchParam(ABC):
 
 
 @dataclass
-class FieldsSearchParams(ABCSearchParam):
+class FieldsSearchParam(ABCSearchParam):
     is_name: bool
     is_author: bool
     is_tags: bool
     is_description: bool
 
     def __post_init__(self):
-        _convert_data = MappingProxyType({
+        convert_data = MappingProxyType({
             self.is_name: "name",
             self.is_author: "author",
             self.is_tags: "tags",
@@ -30,7 +30,7 @@ class FieldsSearchParams(ABCSearchParam):
         })
         self._params = tuple(
             value
-            for key, value in _convert_data.items()
+            for key, value in convert_data.items()
             if key
         )
 
@@ -39,7 +39,7 @@ class FieldsSearchParams(ABCSearchParam):
 
 
 @dataclass
-class FunctionsSearchParams(ABCSearchParam):
+class FunctionsSearchParam(ABCSearchParam):
     is_creature: bool
     is_tribe_creature: bool
     is_civ_creature: bool
@@ -61,102 +61,92 @@ class FunctionsSearchParams(ABCSearchParam):
     is_adv_story: bool
     is_adv_template: bool
 
-    def compose_string(self) -> str:  # FIXME
-        params = []
+    def __post_init__(self):
+        convert_data = MappingProxyType({
+            self.is_creature: "CREATURE",
+            self.is_tribe_creature: "TRIBE_CREATURE",
+            self.is_civ_creature: "CIV_CREATURE",
+            self.is_space_creature: "SPACE_CREATURE",
+            self.is_adventure_creature: "ADVENTURE_CREATURE",
+            self.is_city_hall: "CITY_HALL",
+            self.is_house: "HOUSE",
+            self.is_industry: "INDUSTRY",
+            self.is_entertainment: "ENTERTAINMENT",
+            self.is_ufo: "UFO",
+            self.is_adv_attack: "ADV_ATTACK",
+            self.is_adv_collect: "ADV_COLLECT",
+            self.is_adv_defend: "ADV_DEFEND",
+            self.is_adv_explore: "ADV_EXPLORE",
+            self.is_adv_explore: "ADV_EXPLORE",
+            self.is_adv_unset: "ADV_UNSET",
+            self.is_adv_puzzle: "ADV_PUZZLE",
+            self.is_adv_quest: "ADV_QUEST",
+            self.is_adv_socialize: "ADV_SOCIALIZE",
+            self.is_adv_story: "ADV_STORY",
+            self.is_adv_template: "ADV_TEMPLATE",
+        })
+        self._params = tuple(
+            value
+            for key, value in convert_data.items()
+            if key
+        )
 
-        if self.is_creature:
-            params.append("CREATURE")
-        if self.is_tribe_creature:
-            params.append("TRIBE_CREATURE")
-        if self.is_civ_creature:
-            params.append("CIV_CREATURE")
-        if self.is_space_creature:
-            params.append("SPACE_CREATURE")
-        if self.is_adventure_creature:
-            params.append("ADVENTURE_CREATURE")
-        if self.is_city_hall:
-            params.append("CITY_HALL")
-        if self.is_house:
-            params.append("HOUSE")
-        if self.is_industry:
-            params.append("INDUSTRY")
-        if self.is_entertainment:
-            params.append("ENTERTAINMENT")
-        if self.is_ufo:
-            params.append("UFO")
-        if self.is_adv_attack:
-            params.append("ADV_ATTACK")
-        if self.is_adv_collect:
-            params.append("ADV_COLLECT")
-        if self.is_adv_defend:
-            params.append("ADV_DEFEND")
-        if self.is_adv_explore:
-            params.append("ADV_EXPLORE")
-        if self.is_adv_unset:
-            params.append("ADV_UNSET")
-        if self.is_adv_puzzle:
-            params.append("ADV_PUZZLE")
-        if self.is_adv_quest:
-            params.append("ADV_QUEST")
-        if self.is_adv_socialize:
-            params.append("ADV_SOCIALIZE")
-        if self.is_adv_story:
-            params.append("ADV_STORY")
-        if self.is_adv_template:
-            params.append("ADV_TEMPLATE")
-
-        return f"[{','.join(params)}]"
+    def compose_string(self) -> str:
+        return f"[{','.join(self._params)}]"
 
 
 @dataclass
-class ModelsSearchParams(ABCSearchParam):
+class ModelsSearchParam(ABCSearchParam):
     is_land: bool
     is_air: bool
     is_water: bool
 
-    def compose_string(self) -> str:  # FIXME
-        params = []
+    def __post_init__(self):
+        convert_data = MappingProxyType({
+            self.is_land: "LAND",
+            self.is_air: "AIR",
+            self.is_water: "WATER",
+        })
+        self._params = tuple(
+            value
+            for key, value in convert_data.items()
+            if key
+        )
 
-        if self.is_land:
-            params.append("LAND")
-        if self.is_air:
-            params.append("AIR")
-        if self.is_water:
-            params.append("WATER")
-
-        return f"[{','.join(params)}]"
+    def compose_string(self) -> str:
+        return f"[{','.join(self._params)}]"
 
 
 @dataclass
-class PurposesSearchParams(ABCSearchParam):
-    _a = {}
-
+class PurposesSearchParam(ABCSearchParam):
     is_military: bool
     is_economic: bool
     is_cultural: bool
     is_colony: bool
 
-    def compose_string(self) -> str:  # FIXME
-        params = []
+    def __post_init__(self):
+        convert_data = MappingProxyType({
+            self.is_military: "MILITARY",
+            self.is_economic: "ECONOMIC",
+            self.is_cultural: "CULTURAL",
+            self.is_colony: "COLONY",
+        })
+        self._params = tuple(
+            value
+            for key, value in convert_data.items()
+            if key
+        )
 
-        if self.is_military:
-            params.append("MILITARY")
-        if self.is_economic:
-            params.append("ECONOMIC")
-        if self.is_cultural:
-            params.append("CULTURAL")
-        if self.is_colony:
-            params.append("COLONY")
-
-        return f"[{','.join(params)}]"
+    def compose_string(self) -> str:
+        return f"[{','.join(self._params)}]"
 
 
 @dataclass
 class SearchParams():
-    fields: FieldsSearchParams
-    functions: FunctionsSearchParams
-    models: ModelsSearchParams
-    purposes: PurposesSearchParams
+    fields: FieldsSearchParam
+    functions: FunctionsSearchParam
+    models: ModelsSearchParam
+    purposes: PurposesSearchParam
 
 
 class APIClient():
