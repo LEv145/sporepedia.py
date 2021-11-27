@@ -26,7 +26,8 @@ class FieldsSearchParam(ABCSearchParam):
             self.is_name: "name",
             self.is_author: "author",
             self.is_tags: "tags",
-            self.is_description: "description"
+            self.is_description: "description",
+            True: "test"
         })
         self._params = tuple(
             value
