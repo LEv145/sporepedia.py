@@ -26,7 +26,7 @@ class FieldsSearchParam(ABCSearchParam):
             self.is_name: "name",
             self.is_author: "author",
             self.is_tags: "tags",
-            self.is_description: "description"
+
         })
         self._params = tuple(
             value
@@ -83,7 +83,7 @@ class FunctionsSearchParam(ABCSearchParam):
             self.is_adv_quest: "ADV_QUEST",
             self.is_adv_socialize: "ADV_SOCIALIZE",
             self.is_adv_story: "ADV_STORY",
-            self.is_adv_template: "ADV_TEMPLATE",
+            self.is_adv_template: "ADV_TEMPLATE"
         })
         self._params = tuple(
             value
@@ -105,7 +105,7 @@ class ModelsSearchParam(ABCSearchParam):
         convert_data = MappingProxyType({
             self.is_land: "LAND",
             self.is_air: "AIR",
-            self.is_water: "WATER",
+            self.is_water: "WATER"
         })
         self._params = tuple(
             value
@@ -129,7 +129,7 @@ class PurposesSearchParam(ABCSearchParam):
             self.is_military: "MILITARY",
             self.is_economic: "ECONOMIC",
             self.is_cultural: "CULTURAL",
-            self.is_colony: "COLONY",
+            self.is_colony: "COLONY"
         })
         self._params = tuple(
             value
