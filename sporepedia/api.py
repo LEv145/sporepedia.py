@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from types import TracebackType
+from types import TracebackType, MappingProxyType
 from typing import Optional, Type, TypeVar
 
 import aiohttp
@@ -10,8 +10,8 @@ from .constants import BASE_URL
 
 class ABCSearchParam(ABC):
     @abstractmethod
-    def to_string(self) -> str:
-        """Convert dataclass to string for API"""
+    def compose_string(self) -> str:
+        """compose dataclass to string for API"""
 
 
 @dataclass
@@ -21,19 +21,21 @@ class FieldsSearchParams(ABCSearchParam):
     is_tags: bool
     is_description: bool
 
-    def to_string(self) -> str:
-        params = []
+    def __post_init__(self):
+        _convert_data = MappingProxyType({
+            self.is_name: "name",
+            self.is_author: "author",
+            self.is_tags: "tags",
+            self.is_description: "description"
+        })
+        self._params = tuple(
+            value
+            for key, value in _convert_data.items()
+            if key
+        )
 
-        if self.is_name:
-            params.append("name")
-        if self.is_author:
-            params.append("author")
-        if self.is_tags:
-            params.append("tags")
-        if self.is_description:
-            params.append("description")
-
-        return f"[{','.join(params)}]"
+    def compose_string(self) -> str:
+        return f"[{','.join(self._params)}]"
 
 
 @dataclass
@@ -59,7 +61,7 @@ class FunctionsSearchParams(ABCSearchParam):
     is_adv_story: bool
     is_adv_template: bool
 
-    def to_string(self) -> str:
+    def compose_string(self) -> str:  # FIXME
         params = []
 
         if self.is_creature:
@@ -112,7 +114,7 @@ class ModelsSearchParams(ABCSearchParam):
     is_air: bool
     is_water: bool
 
-    def to_string(self) -> str:
+    def compose_string(self) -> str:  # FIXME
         params = []
 
         if self.is_land:
@@ -127,12 +129,14 @@ class ModelsSearchParams(ABCSearchParam):
 
 @dataclass
 class PurposesSearchParams(ABCSearchParam):
+    _a = {}
+
     is_military: bool
     is_economic: bool
     is_cultural: bool
     is_colony: bool
 
-    def to_string(self) -> str:
+    def compose_string(self) -> str:  # FIXME
         params = []
 
         if self.is_military:
@@ -185,26 +189,24 @@ class APIClient():
         text: str,
         lenght: int,
         params: SearchParams,
-        filter: str  # TODO: Enum
+        filter: str,  # TODO: Enum
+        batch_id: int = 1,
+        adv: int = 1
     ):
-        if self._session is None:
-            raise ValueError("The session does not exist")
-
         data = (
             "callCount=1\n"
-            "batchId=1\n"
             "scriptSessionId=EEC7AACA9B835CB826C147F3784E3FA2284\n"
             "c0-scriptName=searchService\n"
             "c0-methodName=searchAssetsDWR\n"
             "c0-id=0\n"
-            "c0-adv=1\n"
+            f"c0-adv={adv}\n"
             f"c0-searchText={text}\n"
             f"c0-maxResults={lenght}\n"
             f"c0-filter={filter}\n"
-            f"c0-fields={params.fields.to_string()}\n"
-            f"c0-functions={params.functions.to_string()}\n"
-            f"c0-purposes={params.purposes.to_string()}\n"
-            f"c0-modes={params.models.to_string()}\n",
+            f"c0-fields={params.fields.compose_string()}\n"
+            f"c0-functions={params.functions.compose_string()}\n"
+            f"c0-purposes={params.purposes.compose_string()}\n"
+            f"c0-modes={params.models.compose_string()}\n",
             "c0-param0=Object_Object:{"
                 "adv:reference:c0-adv, "  # noqa: E131
                 "searchText:reference:c0-searchText, "
@@ -215,14 +217,23 @@ class APIClient():
                 "modes:reference:c0-modes, "
                 "filter:reference:c0-filter "
             "}\n"
-            "batchId=1"
+            f"batchId={batch_id}"
         )
-        async with self._session.get(
+        responce = await self._request(
             f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
             data=data
-        ) as responce:
-            # TODO: Check status from `dwr.engine`
-            return responce
+        )
+        return responce
+
+    async def _request(self, *args, **kw) -> str:
+        if self._session is None:
+            raise ValueError("The session does not exist")
+
+        responce = await self._session.get(*args, **kw)
+        responce.raise_for_status()
+        return (
+            await responce.text()
+        )
 
     async def close(self) -> None:
         if self._session is None:
