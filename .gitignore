@@ -1,5 +1,11 @@
+# VSCode files
 .vscode/
+
+# Test files
 test.py
+
+# Dev files
+*.py_dev
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

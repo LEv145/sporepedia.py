@@ -11,6 +11,8 @@ aiohttp = "^3.8.1"
 dataclasses-json = "^0.5.6"
 asyncclick = "^8.0.1"
 anyio = "^3.4.0"
+regex = "^2021.11.10"
+Js2Py = "^0.71"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
