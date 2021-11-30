@@ -216,10 +216,11 @@ class APIClient():
                 "filter:reference:c0-filter "
             "}\n"
             f"batchId={batch_id}"
-        )  # TODO: Move to function
+        )
 
         response = await self._request(
-            f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
+            method="POST",
+            url=f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
             data=data,
         )
         return (
@@ -232,12 +233,17 @@ class APIClient():
 
         await self._session.close()
 
-    async def _request(self, *args, **kw) -> aiohttp.ClientResponse:
+    async def _request(self, method: str, url: str, *args, **kw) -> aiohttp.ClientResponse:
         if self._session is None:
             raise ValueError("The session does not exist")
 
-        response = await self._session.post(*args, **kw)
+        response = await self._session.request(
+            url=url,
+            method=method,
+            *args, **kw
+        )
         response.raise_for_status()
+        raise ValueError
         return response
 
     async def __aenter__(

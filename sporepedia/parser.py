@@ -1,8 +1,11 @@
-from typing import Dict
+from typing import TYPE_CHECKING
 
 from .errors import DwrParserError
 
 from js2py import EvalJs
+
+if TYPE_CHECKING:
+    from js2py.base import JsObjectWrapper
 
 
 class SporeDwrEngineParser():
@@ -22,7 +25,7 @@ class SporeDwrEngineParser():
         "};\n"
     )
 
-    def parse(self, text: str) -> Dict[str, str]:
+    def parse(self, text: str) -> "JsObjectWrapper":
         js_code = text.replace("throw 'allowScriptTagRemoting is false.';", "")  # Remove throw
 
         context = EvalJs()
