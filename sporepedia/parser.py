@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-from typing import Dict, Tuple
+from typing import Dict
 
 from .errors import DwrParserError
 
@@ -23,7 +22,7 @@ class SporeDwrEngineParser():
         "};\n"
     )
 
-    def parse(self, text: str) -> Tuple[Dict[str, str], Dict[str, str]]:
+    def parse(self, text: str) -> Dict[str, str]:
         js_code = text.replace("throw 'allowScriptTagRemoting is false.';", "")  # Remove throw
 
         context = EvalJs()
@@ -40,4 +39,4 @@ class SporeDwrEngineParser():
         if errorlog is not None:
             raise DwrParserError(message=errorlog["message"], name=errorlog["name"])
 
-        return outlog, errorlog
+        return outlog
