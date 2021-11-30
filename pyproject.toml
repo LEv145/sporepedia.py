@@ -20,6 +20,7 @@ mypy = "^0.910"
 mkinit = "^0.3.3"
 black = "^21.11b1"
 pyinstaller = "^4.7"
+aiounittest = "^1.4.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

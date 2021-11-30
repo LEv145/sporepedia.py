@@ -5,7 +5,7 @@ from sporepedia.errors import DwrParserError
 from sporepedia.parser import SporeDwrEngineParser
 
 
-class TestSporeDwrEngineParsers(unittest.TestCase):
+class SporeDwrEngineParsersTest(unittest.TestCase):
 
     def test_1(self):  # TODO: Name?
         parser = SporeDwrEngineParser()
@@ -69,7 +69,8 @@ s10[0]=s1;s10[1]=s2;
 dwr.engine._remoteHandleCallback('8','0',{resultSize:2846,results:s3,resultsPerType:s4});"""
 
         outlog = parser.parse(text)
-        self.assertIsInstance(  # TODO
-            outlog.to_dict(),
-            dict
+
+        self.assertEqual(  # TODO
+            outlog.to_dict()["resultSize"],
+            2846
         )
