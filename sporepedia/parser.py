@@ -4,6 +4,7 @@ from .errors import DwrParserError
 
 from js2py import EvalJs
 
+
 if TYPE_CHECKING:
     from js2py.base import JsObjectWrapper
 

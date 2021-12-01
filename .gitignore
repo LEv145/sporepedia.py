@@ -3,6 +3,7 @@
 
 # Test files
 test.py
+black.py
 
 # Dev files
 *.py_dev
