@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import AsyncMock, patch
 
@@ -10,8 +11,15 @@ class APITest(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self._client = APIClient()
 
+    @unittest.skipIf(
+        os.getenv("SKIP_REAL", False),
+        "Skipping tests that hit the real API server"
+    )
+    async def test_actual_search(self):  # TODO
+        ...
+
     @patch.object(APIClient, "_request")
-    async def test_search(self, mock_request: AsyncMock):  # TODO
+    async def test_search(self, mock_request: AsyncMock):  # TODO: Relevance check
         mock_request.return_value.text.return_value = """throw 'allowScriptTagRemoting is false.';
 //#DWR-INSERT
 //#DWR-REPLY
