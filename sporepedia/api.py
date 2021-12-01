@@ -7,6 +7,7 @@ import aiohttp
 
 from sporepedia.enums import SearchFilter
 
+from .parser import SporeDwrEngineParser
 from .constants import BASE_URL
 
 
@@ -223,9 +224,9 @@ class APIClient():
             url=f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
             data=data,
         )
-        return (
-            await response.text()
-        )  # TODO: Parser
+
+        parser = SporeDwrEngineParser()
+        return parser.parse(await response.text())
 
     async def close(self) -> None:
         if self._session is None:
@@ -243,7 +244,6 @@ class APIClient():
             *args, **kw
         )
         response.raise_for_status()
-        raise ValueError
         return response
 
     async def __aenter__(
