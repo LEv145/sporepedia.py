@@ -9,6 +9,11 @@ if TYPE_CHECKING:
     from js2py.base import JsObjectWrapper
 
 
+def parse_dwr(raw_data: str):
+    parser = SporeDwrEngineParser()
+    return parser.parse(raw_data)
+
+
 class SporeDwrEngineParser():
     _extension_code = (
         "outlog = null;\n"
@@ -26,8 +31,8 @@ class SporeDwrEngineParser():
         "};\n"
     )
 
-    def parse(self, text: str) -> "JsObjectWrapper":
-        js_code = text.replace("throw 'allowScriptTagRemoting is false.';", "")  # Remove throw
+    def parse(self, raw_data: str) -> "JsObjectWrapper":
+        js_code = raw_data.replace("throw 'allowScriptTagRemoting is false.';", "")  # Remove throw
 
         context = EvalJs()
 
