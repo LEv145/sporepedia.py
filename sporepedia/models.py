@@ -38,8 +38,8 @@ class Author():
 
     create_at: datetime
     newest_asset_create_at: datetime
-    update_at: datetime
-    last_login_at: datetime
+    update_at: Optional[datetime]
+    last_login_at: Optional[datetime]
 
 
 @dataclass
@@ -64,7 +64,7 @@ class Creation():
     original_id: Optional[int]
     parent_id: Optional[int]
 
-    rating: int
+    rating: float
     name: str
     type: str  # TODO: StrEnum
     description: str
@@ -87,7 +87,7 @@ class Creation():
     feature_at: Optional[datetime]
 
     author: Author
-    adventure_stat: AdventureStat
+    adventure_stat: Optional[AdventureStat]
     status: Status
 
 

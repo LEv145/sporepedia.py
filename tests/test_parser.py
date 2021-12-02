@@ -7,7 +7,7 @@ from sporepedia.dwr_parser import SporeDwrEngineParser
 
 class SporeDwrEngineParsersTest(unittest.TestCase):
 
-    def test_1(self):  # TODO: Name?
+    def test_exception(self):  # TODO: Name?
         parser = SporeDwrEngineParser()
 
         text = """throw 'allowScriptTagRemoting is false.';
@@ -27,7 +27,7 @@ message:'The specified call count is not a number' });
             self.assertEqual(cast(DwrParserError, error).message, "The specified call count is not a number")
             self.assertEqual(cast(DwrParserError, error).name, "org.directwebremoting.extend.ServerException")
 
-    def test_2(self):
+    def test_normal(self):
         parser = SporeDwrEngineParser()
 
         text = """throw 'allowScriptTagRemoting is false.';
