@@ -2,7 +2,7 @@ from typing import cast
 import unittest
 
 from sporepedia.errors import DwrParserError
-from sporepedia.parser import SporeDwrEngineParser
+from sporepedia.dwr_parser import SporeDwrEngineParser
 
 
 class SporeDwrEngineParsersTest(unittest.TestCase):
