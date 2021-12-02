@@ -11,71 +11,89 @@ from .models import (
 )
 
 
-def build_creation(raw_data: str) -> SearchServiceResult:  # TODO: Class
-    js_object = parse_dwr(raw_data)
+class SearchServiceBuilder():
+    def build(self, raw_data: str) -> SearchServiceResult:  # TODO: Class
+        js_object = parse_dwr(raw_data)
 
-    result_size = cast(int, js_object["resultSize"])
-    results = cast(list, js_object["resultSize"])
+        result_size = cast(int, js_object["resultSize"])
+        results = cast(list, js_object["results"])
 
-    return SearchServiceResult(
-        result_size=result_size,
-        results=[
-            Creation(
-                id=result["id"],
-                original_id=result["originalId"],
-                parent_id=result["parentId"],
-                rating=result["rating"],
-                name=result["name"],
-                type=result["type"],
-                description=result["description"],
-                images_count=result["imageCount"],
-                asset_id=result["assetId"],
-                thumbnail_size=result["thumbnailSize"],
-                source_ip=result["sourceIp"],
-                audit_trail=result["auditTrail"],
-                locale_string=result["localeString"],
-                required_products=result["requiredProducts"],
-                tags=result["tags"].split(","),
-                asset_function=result["assetFunction"],
-                is_quality=result["quality"],
-                create_at=result["created"]._obj.to_utc_dt(),
-                update_at=result["updated"]._obj.to_utc_dt(),
-                feature_at=result["featured"]._obj.to_utc_dt(),  # FIXME
-                author=Author(
-                    id=result["author"]["id"],
-                    user_id=result["author"]["userId"],
-                    nucleus_user_id=result["author"]["nucleusUserId"],
-                    persona_id=result["author"]["personaId"],
-                    name=result["author"]["name"],
-                    screen_name=result["author"]["screenName"],
-                    avatar_image=f'{BASE_URL}/static/{result["author"]["avatarImage"]}',
-                    tagline=result["author"]["tagline"],
-                    assets_count=result["author"]["assetCount"],
-                    subscriptions_count=result["author"]["subscriptionCount"],
-                    is_default=result["author"]["default"],
-                    is_custom_avatar_image=result["author"]["avatarImageCustom"],
-                    create_at=result["author"]["dateCreated"]._obj.to_utc_dt(),
-                    update_at=result["author"]["updated"]._obj.to_utc_dt(),
-                    last_login_at=result["author"]["lastLogin"]._obj.to_utc_dt(),
-                    newest_asset_create_at=result["author"]["newestAssetCreated"]._obj.to_utc_dt(),
-                ),
-                adventure_stat=AdventureStat(
-                    id=result["adventureStat"]["adventureId"],
-                    leaderboard_id=result["adventureStat"]["adventureLeaderboardId"],
-                    difficulty=result["adventureStat"]["difficulty"],
-                    locked_captain_asset_id=result["adventureStat"]["lockedCaptainAssetId"],
-                    plays_count=result["adventureStat"]["totalPlays"],
-                    losses_count=result["adventureStat"]["losses"],
-                    wins_count=result["adventureStat"]["wins"],
-                    points_count=result["adventureStat"]["pointValue"],
-                    update_at=result["adventureStat"]["updated"]._obj.to_utc_dt(),
-                ),
-                status=Status(
-                    name=result["status"]["name"],
-                    name_key=result["status"]["nameKey"],
-                    declaring_class_name=result["status"]["declaringClass"]["name"],
-                )
-            )
-            for result in results
-        ]
-    )
+        return SearchServiceResult(
+            result_size=result_size,
+            results=[
+                self.build_creation(result)
+                for result in results
+            ]
+        )
+
+    def build_creation(self, raw_data) -> Creation:
+        return Creation(
+            id=raw_data["id"],
+            original_id=raw_data["originalId"],
+            parent_id=raw_data["parentId"],
+            rating=raw_data["rating"],
+            name=raw_data["name"],
+            type=raw_data["type"],
+            description=raw_data["description"],
+            images_count=raw_data["imageCount"],
+            asset_id=raw_data["assetId"],
+            thumbnail_size=raw_data["thumbnailSize"],
+            source_ip=raw_data["sourceIp"],
+            audit_trail=raw_data["auditTrail"],
+            locale_string=raw_data["localeString"],
+            required_products=raw_data["requiredProducts"],
+            tags=raw_data["tags"].split(","),
+            asset_function=raw_data["assetFunction"],
+            is_quality=raw_data["quality"],
+            create_at=raw_data["created"]._obj.to_utc_dt(),
+            update_at=raw_data["updated"]._obj.to_utc_dt(),
+            feature_at=(
+                None
+                if raw_data["featured"] is None else
+                raw_data["featured"]._obj.to_utc_dt()
+            ),
+            author=self.build_author(raw_data["author"]),
+            adventure_stat=self.build_adventure_stat(raw_data["adventureStat"]),
+            status=self.build_status(raw_data["status"]),
+        )
+
+    def build_author(self, raw_data) -> Author:
+        a = raw_data["id"]
+        return Author(
+            id=raw_data["id"],
+            user_id=raw_data["userId"],
+            nucleus_user_id=raw_data["nucleusUserId"],
+            persona_id=raw_data["personaId"],
+            name=raw_data["name"],
+            screen_name=raw_data["screenName"],
+            avatar_image=f'{BASE_URL}/static/{raw_data["avatarImage"]}',
+            tagline=raw_data["tagline"],
+            assets_count=raw_data["assetCount"],
+            subscriptions_count=raw_data["subscriptionCount"],
+            is_default=raw_data["default"],
+            is_custom_avatar_image=raw_data["avatarImageCustom"],
+            create_at=raw_data["dateCreated"]._obj.to_utc_dt(),
+            update_at=raw_data["updated"]._obj.to_utc_dt(),
+            last_login_at=raw_data["lastLogin"]._obj.to_utc_dt(),
+            newest_asset_create_at=raw_data["newestAssetCreated"]._obj.to_utc_dt(),
+        )
+
+    def build_adventure_stat(self, raw_data) -> AdventureStat:
+        return AdventureStat(
+            id=raw_data["adventureId"],
+            leaderboard_id=raw_data["adventureLeaderboardId"],
+            difficulty=raw_data["difficulty"],
+            locked_captain_asset_id=raw_data["lockedCaptainAssetId"],
+            plays_count=raw_data["totalPlays"],
+            losses_count=raw_data["losses"],
+            wins_count=raw_data["wins"],
+            points_count=raw_data["pointValue"],
+            update_at=raw_data["updated"]._obj.to_utc_dt(),
+        )
+
+    def build_status(self, raw_data) -> Status:
+        return Status(
+            name=raw_data["name"],
+            name_key=raw_data["nameKey"],
+            declaring_class_name=raw_data["declaringClass"]["name"],
+        )
