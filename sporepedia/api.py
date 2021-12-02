@@ -1,117 +1,18 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from types import TracebackType
-from typing import Optional, Type, TypeVar
+from typing import TYPE_CHECKING, Optional, Type, TypeVar
 
 import aiohttp
 
 from sporepedia.enums import SearchFilter
 
-from .builders import SearchServiceBuilder
+from .builders import SearchRequestBuilder, SearchResponceBuilder
 from .constants import BASE_URL
 
 
-class APIClient():
-    """
-    Low level api
-    """
-    APIClientType = TypeVar("APIClientType", bound="APIClient")
-
-    _base_url: str = BASE_URL
-
-    def __init__(self) -> None:
-        self._session: Optional[aiohttp.ClientSession] = None
-
-    async def create(self, session: Optional[aiohttp.ClientSession] = None) -> None:
-        self._session = (
-            aiohttp.ClientSession()
-            if session is None else
-            session
-        )
-
-    async def search(
-        self,
-        text: str,
-        lenght: int,
-        params: "SearchParams",
-        filter: Optional[SearchFilter],
-        batch_id: int = 1,
-        adv: int = 1,
-    ):
-        _filter = (
-            "NONE"
-            if filter is None else
-            filter.value
-        )
-
-        data = (
-            "callCount=1\n"
-            "scriptSessionId=B46A8740BB941667AB32B719F1B7115A19\n"
-            "c0-scriptName=searchService\n"
-            "c0-methodName=searchAssetsDWR\n"
-            "c0-id=0\n"
-            f"c0-adv={adv}\n"
-            f"c0-searchText={text}\n"
-            f"c0-maxResults={lenght}\n"
-            f"c0-filter={_filter}\n"
-            f"c0-fields={params._fields.compose_string()}\n"
-            f"c0-functions={params._functions.compose_string()}\n"
-            f"c0-purposes={params._purposes.compose_string()}\n"
-            f"c0-modes={params._models.compose_string()}\n"
-            "c0-param0=Object_Object:{"
-                "adv:reference:c0-adv, "  # noqa: E131
-                "searchText:reference:c0-searchText, "
-                "maxResults:reference:c0-maxResults, "
-                "fields:reference:c0-fields, "
-                "functions:reference:c0-functions, "
-                "purposes:reference:c0-purposes, "
-                "modes:reference:c0-modes, "
-                "filter:reference:c0-filter "
-            "}\n"
-            f"batchId={batch_id}"
-        )
-
-        response = await self._request(
-            method="POST",
-            url=f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
-            data=data,
-        )
-
-        builder = SearchServiceBuilder()
-        return builder.build(await response.text())
-
-    async def close(self) -> None:
-        if self._session is None:
-            raise ValueError("The session does not exist")
-
-        await self._session.close()
-
-    async def _request(self, method: str, url: str, *args, **kw) -> aiohttp.ClientResponse:
-        if self._session is None:
-            raise ValueError("The session does not exist")
-
-        response = await self._session.request(
-            url=url,
-            method=method,
-            *args, **kw
-        )
-        response.raise_for_status()
-        return response
-
-    async def __aenter__(
-        self: "APIClientType",
-        session: Optional[aiohttp.ClientSession] = None
-    ) -> "APIClientType":
-        await self.create(session)
-        return self
-
-    async def __aexit__(
-        self,
-        _exception_type: Type[BaseException],
-        _exception: BaseException,
-        _traceback: TracebackType,
-    ) -> None:
-        await self.close()
+if TYPE_CHECKING:
+    from .models import SearchServiceResult
 
 
 class ABCSearchParam(ABC):
@@ -122,7 +23,6 @@ class ABCSearchParam(ABC):
 
 @dataclass
 class FieldsSearchParam(ABCSearchParam):
-    # FIXME: Alignment?
     is_name: bool = False
     is_author: bool = False
     is_tag: bool = False
@@ -250,10 +150,10 @@ class PurposesSearchParam(ABCSearchParam):
 
 @dataclass
 class SearchParams():
-    fields: Optional[FieldsSearchParam] = None
-    functions: Optional[FunctionsSearchParam] = None
-    models: Optional[ModelsSearchParam] = None
-    purposes: Optional[PurposesSearchParam] = None
+    fields: Optional["FieldsSearchParam"] = None
+    functions: Optional["FunctionsSearchParam"] = None
+    models: Optional["ModelsSearchParam"] = None
+    purposes: Optional["PurposesSearchParam"] = None
 
     def __post_init__(self):
         self._fields = (
@@ -276,3 +176,84 @@ class SearchParams():
             if self.purposes is not None else
             PurposesSearchParam()
         )
+
+
+class APIClient():
+    """
+    Low level api
+    """
+    APIClientType = TypeVar("APIClientType", bound="APIClient")
+
+    _base_url: str = BASE_URL
+
+    def __init__(self) -> None:
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def search(
+        self,
+        text: str,
+        lenght: int = 20,
+        params: "SearchParams" = SearchParams(),
+        filter: Optional[SearchFilter] = None,
+        batch_id: int = 1,
+        adv: int = 1,
+    ) -> "SearchServiceResult":
+        builder = SearchRequestBuilder()
+        data = builder.build(
+            text=text,
+            lenght=lenght,
+            params=params,
+            filter=filter,
+            batch_id=batch_id,
+            adv=adv
+        )
+
+        response = await self._request(
+            method="POST",
+            url=f"{self._base_url}/jsserv/call/plaincall/searchService.searchAssetsDWR.dwr",
+            data=data,
+        )
+
+        builder = SearchResponceBuilder()
+        return builder.build(await response.text())
+
+    async def _request(self, method: str, url: str, *args, **kw) -> aiohttp.ClientResponse:
+        if self._session is None:
+            await self.create()
+            assert self._session is not None
+
+        response = await self._session.request(
+            url=url,
+            method=method,
+            *args, **kw
+        )
+        response.raise_for_status()
+        return response
+
+    async def create(self, session: Optional[aiohttp.ClientSession] = None) -> None:
+        self._session = (
+            aiohttp.ClientSession()
+            if session is None else
+            session
+        )
+
+    async def close(self) -> None:
+        if self._session is None:
+            raise ValueError("The session does not exist")
+
+        await self._session.close()
+
+    async def __aenter__(
+        self: "APIClientType",
+        session: Optional[aiohttp.ClientSession] = None
+    ) -> "APIClientType":
+        await self.create(session)
+        return self
+
+    async def __aexit__(
+        self,
+        _exception_type: Type[BaseException],
+        _exception: BaseException,
+        _traceback: TracebackType,
+    ) -> None:
+        await self.close()

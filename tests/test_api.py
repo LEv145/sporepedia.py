@@ -1,25 +1,26 @@
-import os
 import unittest
 from unittest.mock import AsyncMock, patch
+from datetime import datetime
 
 from sporepedia import api
 from sporepedia.api import APIClient
 from sporepedia.enums import SearchFilter
+from sporepedia.models import (
+    Creation,
+    SearchServiceResult,
+    Author,
+    AdventureStat,
+    Status,
+    StatusName
+)
 
 
 class APITest(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self._client = APIClient()
 
-    @unittest.skipIf(
-        os.getenv("SKIP_REAL", False),
-        "Skipping tests that hit the real API server"
-    )
-    async def test_actual_search(self):  # TODO
-        ...
-
     @patch.object(APIClient, "_request")
-    async def test_search(self, mock_request: AsyncMock):  # TODO: Relevance check
+    async def test_search(self, mock_request: AsyncMock):
         mock_request.return_value.text.return_value = """throw 'allowScriptTagRemoting is false.';
 //#DWR-INSERT
 //#DWR-REPLY
@@ -49,9 +50,9 @@ s7.name="com.ea.sp.pollinator.db.Asset$Status";
 s2['class com.ea.sp.pollinator.db.Asset']=s8;
 s8[0]=s0;
 dwr.engine._remoteHandleCallback('4','0',{resultSize:1,results:s1,resultsPerType:s2});
-"""
+"""  # TODO: To testdata.py
         async with self._client as client:
-            await client.search(
+            result = await client.search(
                 text="test",
                 lenght=20,
                 params=api.SearchParams(
@@ -77,3 +78,69 @@ dwr.engine._remoteHandleCallback('4','0',{resultSize:1,results:s1,resultsPerType
                 batch_id=4,
                 adv=2
             )
+
+        self.assertEqual(
+            result,
+            SearchServiceResult(
+                result_size=1,
+                results=[
+                    Creation(
+                        id=500377997389,
+                        original_id=500377997764,
+                        parent_id=500377997764,
+                        rating=14.376374,
+                        name="The Psychic Planet",
+                        type="ADVENTURE",
+                        description="A psychic entity has you at its disposal. What will it have you do? Now actually working! Thanks for making this a rising star guys.EDIT: I haven't checked out this in a while! Thanks for making this on the TOP PAGE! ",
+                        images_count=2,
+                        thumbnail_size=41862,
+                        source_ip="98.203.139.225",
+                        locale_string="en_US",
+                        required_products=["EXPANSION_PACK1", "INSECT_LIMBS", "SPORE_CORE"],
+                        tags=["cool", "fun", "lava", "psychic", "puzzle", "test"],
+                        audit_trail=None,
+                        asset_id=500377997389,
+                        asset_function="ADV_PUZZLE",
+                        is_quality=True,
+                        create_at=datetime(2009, 6, 26, 16, 55, 48),
+                        update_at=datetime(2016, 4, 28, 15, 45, 14),
+                        feature_at=datetime(2009, 7, 8, 0, 0),
+                        author=Author(
+                            id=2262951433,
+                            user_id=2262951433,
+                            nucleus_user_id=2262951433,
+                            persona_id=173842184,
+                            name="Doomwaffle",
+                            screen_name="Doomwaffle",
+                            avatar_image="https://www.spore.com/static/thumb/500/335/938/500335938963.png",
+                            tagline="Galactic Adventurer",
+                            assets_count=128,
+                            subscriptions_count=359,
+                            is_default=True,
+                            is_custom_avatar_image=False,
+                            create_at=datetime(2008, 6, 18, 1, 57),
+                            newest_asset_create_at=datetime(2012, 3, 22, 21, 23),
+                            update_at=datetime(2009, 6, 26, 4, 19, 36),
+                            last_login_at=datetime(2012, 5, 25, 0, 52, 5),
+                        ),
+                        adventure_stat=AdventureStat(
+                            id=500377997389,
+                            leaderboard_id=500377997389,
+                            difficulty=5,
+                            locked_captain_asset_id=None,
+                            plays_count=157748,
+                            losses_count=104177,
+                            wins_count=53571,
+                            points_count=51,
+                            update_at=datetime(2013, 6, 18, 18, 13, 21),
+                        ),
+                        status=Status(
+                            name=StatusName("CLASSIFIED"),
+                            name_key="asset.status.classified",
+                            declaring_class_name="com.ea.sp.pollinator.db.Asset$Status",
+                        ),
+                    )
+                ],
+            )
+        )
+
