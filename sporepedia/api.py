@@ -7,7 +7,7 @@ import aiohttp
 
 from sporepedia.enums import SearchFilter
 
-from .builders import build_creation
+from .builders import SearchServiceBuilder
 from .constants import BASE_URL
 
 
@@ -77,7 +77,8 @@ class APIClient():
             data=data,
         )
 
-        return build_creation(await response.text())
+        builder = SearchServiceBuilder()
+        return builder.build(await response.text())
 
     async def close(self) -> None:
         if self._session is None:
