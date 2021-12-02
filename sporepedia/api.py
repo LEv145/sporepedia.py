@@ -7,7 +7,8 @@ import aiohttp
 
 from sporepedia.enums import SearchFilter
 
-from .builders import SearchRequestBuilder, SearchResponceBuilder
+from .composers import SearchRequestComposer
+from .builders import SearchResponceBuilder
 from .constants import BASE_URL
 
 
@@ -198,8 +199,8 @@ class APIClient():
         batch_id: int = 1,
         adv: int = 1,
     ) -> "SearchServiceResult":
-        builder = SearchRequestBuilder()
-        data = builder.build(
+        composer = SearchRequestComposer()
+        data = composer.compose(
             text=text,
             lenght=lenght,
             params=params,

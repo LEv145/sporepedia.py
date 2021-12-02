@@ -65,9 +65,11 @@ class APITest(unittest.IsolatedAsyncioTestCase):
                         rating=14.376374,
                         name="The Psychic Planet",
                         type="ADVENTURE",
-                        description="A psychic entity has you at its disposal. What will it have you do? \
-                            Now actually working! Thanks for making this a rising star guys.EDIT: I haven't \
-                            checked out this in a while! Thanks for making this on the TOP PAGE! ",
+                        description=(
+                            "A psychic entity has you at its disposal. What will it have you do? "
+                            "Now actually working! Thanks for making this a rising star guys.EDIT: I haven't "
+                            "checked out this in a while! Thanks for making this on the TOP PAGE! "
+                        ),
                         images_count=2,
                         thumbnail_size=41862,
                         source_ip="98.203.139.225",
