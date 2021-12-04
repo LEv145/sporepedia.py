@@ -12,10 +12,10 @@ class SporeDwrEngineParsersTest(unittest.TestCase):
         parser = SporeDwrEngineParser()
 
         with open(Path("./tests/testdata/dwr_exception.js")) as fp:
-            text = fp.read()
+            js_code = fp.read()
 
         try:
-            parser.parse(text)
+            parser.parse(js_code)
         except Exception as error:
             self.assertIsInstance(error, DwrParserError)
             self.assertEqual(cast(DwrParserError, error).message, "The specified call count is not a number")
@@ -25,9 +25,9 @@ class SporeDwrEngineParsersTest(unittest.TestCase):
         parser = SporeDwrEngineParser()
 
         with open(Path("./tests/testdata/dwr_search_testdata.js")) as fp:
-            text = fp.read()
+            js_code = fp.read()
 
-        outlog = parser.parse(text)
+        outlog = parser.parse(js_code)
 
         self.assertEqual(  # TODO: How test JsObjectWrapper
             outlog.to_dict()["resultSize"],

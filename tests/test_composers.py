@@ -1,6 +1,4 @@
 import unittest
-from pathlib import Path
-
 
 from sporepedia.api import (
     SearchParams,
