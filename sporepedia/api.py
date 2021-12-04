@@ -32,7 +32,6 @@ class ABCSearchParam(ABC):
             for field in fields(cls)
         })  # type: ignore
 
-
     @abstractmethod
     def compose_string(self) -> str:
         """compose dataclass to string for API"""
