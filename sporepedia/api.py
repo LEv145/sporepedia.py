@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Type, TypeVar
 
@@ -17,6 +17,22 @@ if TYPE_CHECKING:
 
 
 class ABCSearchParam(ABC):
+
+    @classmethod
+    def all(cls):
+        return cls(**{
+            field.name: True
+            for field in fields(cls)
+        })  # type: ignore
+
+    @classmethod
+    def none(cls):
+        return cls(**{
+            field.name: False
+            for field in fields(cls)
+        })  # type: ignore
+
+
     @abstractmethod
     def compose_string(self) -> str:
         """compose dataclass to string for API"""
@@ -206,7 +222,8 @@ class APIClient():
             params=params,
             filter=filter,
             batch_id=batch_id,
-            adv=adv
+            adv=adv,
+            session_id="B46A8740BB941667AB32B719F1B7115A19"
         )
 
         response = await self._request(

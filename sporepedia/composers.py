@@ -14,7 +14,8 @@ class SearchRequestComposer():
         params: "SearchParams",
         filter: Optional["SearchFilter"],
         batch_id: int,
-        adv: int
+        adv: int,
+        session_id: str
     ) -> str:
         _filter = (
             "NONE"
@@ -24,7 +25,7 @@ class SearchRequestComposer():
 
         data = (
             "callCount=1\n"
-            "scriptSessionId=B46A8740BB941667AB32B719F1B7115A19\n"
+            f"scriptSessionId={session_id}\n"
             "c0-scriptName=searchService\n"
             "c0-methodName=searchAssetsDWR\n"
             "c0-id=0\n"
