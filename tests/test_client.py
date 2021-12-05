@@ -2,9 +2,11 @@ import unittest
 from unittest.mock import AsyncMock, patch
 from pathlib import Path
 
-from sporepedia.api import APIClient
 from sporepedia.client import SporepediaClient
-from sporepedia.models import SearchServiceResult
+from sporepedia.api.client import (
+    APIClient,
+    SearchServiceResult,
+)
 
 
 class APITest(unittest.IsolatedAsyncioTestCase):

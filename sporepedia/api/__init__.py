@@ -1,28 +1,39 @@
-from .api import (
+from .builders import (
+    SearchResponceBuilder,
+)
+from .client import (
     ABCSearchParam,
     APIClient,
-    AdventureStat,
-    Author,
-    BASE_URL,
-    Creation,
-    DwrParserError,
     FieldsSearchParam,
     FunctionsSearchParam,
     ModelsSearchParam,
     PurposesSearchParam,
-    SearchFilter,
     SearchParams,
+)
+from .composers import (
     SearchRequestComposer,
-    SearchResponceBuilder,
-    SearchServiceResult,
+)
+from .constants import (
+    BASE_URL,
+)
+from .dwr_parser import (
+    DwrParserError,
     SporeDwrEngineParser,
-    Status,
-    StatusName,
     parse_dwr,
+)
+from .enums import (
+    SearchFilter,
+)
+from .mockups import (
     to_python__mockup,
 )
-from .client import (
-    SporepediaClient,
+from .models import (
+    AdventureStat,
+    Author,
+    Creation,
+    SearchServiceResult,
+    Status,
+    StatusName,
 )
 
 __all__ = [
@@ -43,7 +54,6 @@ __all__ = [
     "SearchResponceBuilder",
     "SearchServiceResult",
     "SporeDwrEngineParser",
-    "SporepediaClient",
     "Status",
     "StatusName",
     "parse_dwr",

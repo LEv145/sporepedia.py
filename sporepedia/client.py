@@ -1,6 +1,9 @@
 from typing import TYPE_CHECKING, Optional, Type, TypeVar
 
-from .api import APIClient, SearchParams
+from .api import (
+    APIClient,
+    SearchParams,
+)
 
 
 if TYPE_CHECKING:
@@ -8,8 +11,10 @@ if TYPE_CHECKING:
 
     from aiohttp import ClientSession
 
-    from .enums import SearchFilter
-    from .models import SearchServiceResult
+    from .api import (
+        SearchFilter,
+        SearchServiceResult,
+    )
 
 
 class SporepediaClient():

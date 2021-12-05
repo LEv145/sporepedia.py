@@ -1,12 +1,5 @@
-from typing import TYPE_CHECKING
-
-from .errors import DwrParserError
-
+from js2py.base import JsObjectWrapper
 from js2py import EvalJs
-
-
-if TYPE_CHECKING:
-    from js2py.base import JsObjectWrapper
 
 
 def parse_dwr(raw_data: str):
@@ -35,7 +28,6 @@ class SporeDwrEngineParser():
         js_code = raw_data.replace("throw 'allowScriptTagRemoting is false.';", "")  # Remove throw
 
         context = EvalJs()
-
         context.execute(
             (
                 f"{self._extension_code}"
@@ -49,3 +41,9 @@ class SporeDwrEngineParser():
             raise DwrParserError(message=errorlog["message"], name=errorlog["name"])
 
         return outlog
+
+
+class DwrParserError(Exception):
+    def __init__(self, message: str, name: str) -> None:
+        self.message = message
+        self.name = name

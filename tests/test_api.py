@@ -3,16 +3,21 @@ from unittest.mock import AsyncMock, patch
 from pathlib import Path
 from datetime import datetime
 
-from sporepedia import api
-from sporepedia.api import APIClient
-from sporepedia.enums import SearchFilter
-from sporepedia.models import (
-    Creation,
+from sporepedia.api.client import (
+    APIClient,
+    SearchParams,
+    FieldsSearchParam,
+    FunctionsSearchParam,
+    PurposesSearchParam,
+    SearchFilter,
     SearchServiceResult,
+)
+from sporepedia.api.models import (
+    Creation,
     Author,
     AdventureStat,
     Status,
-    StatusName
+    StatusName,
 )
 
 
@@ -29,13 +34,13 @@ class APITest(unittest.IsolatedAsyncioTestCase):
             result = await client.search(
                 text="test",
                 lenght=20,
-                params=api.SearchParams(
-                    fields=api.FieldsSearchParam(
+                params=SearchParams(
+                    fields=FieldsSearchParam(
                         is_name=True,
                         is_author=True,
                         is_tag=True,
                     ),
-                    functions=api.FunctionsSearchParam(
+                    functions=FunctionsSearchParam(
                         is_tribe_creature=True,
                         is_adventure_creature=True,
                         is_industry=True,
@@ -43,7 +48,7 @@ class APITest(unittest.IsolatedAsyncioTestCase):
                         is_adv_puzzle=True,
                         is_adv_template=True
                     ),
-                    purposes=api.PurposesSearchParam(
+                    purposes=PurposesSearchParam(
                         is_military=True,
                         is_cultural=True,
                     ),
