@@ -1,14 +1,16 @@
 import unittest
 
-from sporepedia.api import (
+from sporepedia.api.composers import (
     SearchParams,
+    SearchFilter,
+    SearchRequestComposer,
+)
+from sporepedia.api.client import (
     FieldsSearchParam,
     ModelsSearchParam,
     PurposesSearchParam,
     FunctionsSearchParam,
-    SearchFilter,
 )
-from sporepedia.composers import SearchRequestComposer
 
 
 class SearchRequestComposerTest(unittest.IsolatedAsyncioTestCase):

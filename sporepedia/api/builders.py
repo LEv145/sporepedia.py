@@ -1,4 +1,7 @@
 from typing import cast
+from unittest.mock import patch
+
+import js2py.base
 
 from .constants import BASE_URL
 from .dwr_parser import parse_dwr
@@ -10,14 +13,22 @@ from .models import (
     Status,
     StatusName,
 )
+from .mockups import to_python__mockup
 
 
 class SearchResponceBuilder():
     def build(self, raw_data: str) -> SearchServiceResult:
         js_object = parse_dwr(raw_data)
 
-        result_size = cast(int, js_object["resultSize"])
-        raw_results = cast(list, js_object["results"])
+        with patch.object(
+            js2py.base,
+            "to_python",
+            to_python__mockup,
+        ):
+            data = js_object.to_dict()
+
+        result_size = cast(int, data["resultSize"])
+        raw_results = cast(list, data["results"])
 
         return SearchServiceResult(
             result_size=result_size,
@@ -27,7 +38,7 @@ class SearchResponceBuilder():
             ]
         )
 
-    def build_creation(self, raw_data) -> Creation:  # TODO?: Use cast for typing
+    def build_creation(self, raw_data: dict) -> Creation:  # TODO?: Use cast for typing
         return Creation(
             id=raw_data["id"],
             original_id=raw_data["originalId"],
@@ -43,15 +54,19 @@ class SearchResponceBuilder():
             audit_trail=raw_data["auditTrail"],
             locale_string=raw_data["localeString"],
             required_products=raw_data["requiredProducts"],
-            tags=raw_data["tags"].split(","),
             asset_function=raw_data["assetFunction"],
             is_quality=raw_data["quality"],
-            create_at=raw_data["created"]._obj.to_utc_dt(),
-            update_at=raw_data["updated"]._obj.to_utc_dt(),
-            feature_at=(
+            create_at=raw_data["created"],
+            update_at=raw_data["updated"],
+            tags=(
+                raw_data["tags"].split(",")
+                if raw_data["tags"] is not None else
                 None
-                if raw_data["featured"] is None else
-                raw_data["featured"]._obj.to_utc_dt()
+            ),
+            feature_at=(
+                raw_data["featured"]
+                if raw_data["featured"] is not None else
+                None
             ),
             author=self.build_author(raw_data["author"]),
             adventure_stat=(
@@ -62,7 +77,7 @@ class SearchResponceBuilder():
             status=self.build_status(raw_data["status"]),
         )
 
-    def build_author(self, raw_data) -> Author:
+    def build_author(self, raw_data: dict) -> Author:
         return Author(
             id=raw_data["id"],
             user_id=raw_data["userId"],
@@ -70,27 +85,27 @@ class SearchResponceBuilder():
             persona_id=raw_data["personaId"],
             name=raw_data["name"],
             screen_name=raw_data["screenName"],
-            avatar_image=f'{BASE_URL}/static/{raw_data["avatarImage"]}',
+            avatar_image=f"{BASE_URL}/static/{raw_data['avatarImage']}",
             tagline=raw_data["tagline"],
             assets_count=raw_data["assetCount"],
             subscriptions_count=raw_data["subscriptionCount"],
             is_default=raw_data["default"],
             is_custom_avatar_image=raw_data["avatarImageCustom"],
-            create_at=raw_data["dateCreated"]._obj.to_utc_dt(),
+            create_at=raw_data["dateCreated"],
             update_at=(
-                raw_data["updated"]._obj.to_utc_dt()
+                raw_data["updated"]
                 if raw_data["updated"] is not None else
                 None
             ),
             last_login_at=(
-                raw_data["lastLogin"]._obj.to_utc_dt()
+                raw_data["lastLogin"]
                 if raw_data["lastLogin"] is not None else
                 None
             ),
-            newest_asset_create_at=raw_data["newestAssetCreated"]._obj.to_utc_dt(),
+            newest_asset_create_at=raw_data["newestAssetCreated"],
         )
 
-    def build_adventure_stat(self, raw_data) -> AdventureStat:
+    def build_adventure_stat(self, raw_data: dict) -> AdventureStat:
         return AdventureStat(
             id=raw_data["adventureId"],
             leaderboard_id=raw_data["adventureLeaderboardId"],
@@ -100,10 +115,10 @@ class SearchResponceBuilder():
             losses_count=raw_data["losses"],
             wins_count=raw_data["wins"],
             points_count=raw_data["pointValue"],
-            update_at=raw_data["updated"]._obj.to_utc_dt(),
+            update_at=raw_data["updated"],
         )
 
-    def build_status(self, raw_data) -> Status:
+    def build_status(self, raw_data: dict) -> Status:
         return Status(
             name=StatusName(raw_data["name"]),
             name_key=raw_data["nameKey"],

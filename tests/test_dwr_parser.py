@@ -2,8 +2,10 @@ from typing import cast
 import unittest
 from pathlib import Path
 
-from sporepedia.errors import DwrParserError
-from sporepedia.dwr_parser import SporeDwrEngineParser
+from sporepedia.api.dwr_parser import (
+    SporeDwrEngineParser,
+    DwrParserError,
+)
 
 
 class SporeDwrEngineParsersTest(unittest.TestCase):

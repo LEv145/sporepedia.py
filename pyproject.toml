@@ -19,6 +19,7 @@ mypy = "^0.910"
 mkinit = "^0.3.3"
 black = "^21.11b1"
 pyinstaller = "^4.7"
+bson = "^0.5.10"
 
 [tool.poetry.scripts]
 sporepedia = "sporepedia.__main__:cli"

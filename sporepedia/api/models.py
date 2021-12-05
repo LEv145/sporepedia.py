@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 from datetime import datetime
 from dataclasses import dataclass
 
@@ -64,18 +64,18 @@ class Creation():
     original_id: Optional[int]
     parent_id: Optional[int]
 
-    rating: float
+    rating: Optional[Union[int, float]]
     name: str
     type: str  # TODO: StrEnum
-    description: str
+    description: Optional[str]
     images_count: int
     thumbnail_size: int
     source_ip: Optional[str]
-    locale_string: str  # TODO: StrEnum
+    locale_string: Optional[str]  # TODO: StrEnum
     required_products: List[str]  # TODO: List[StrEnum]
     tags: Optional[List[str]]
 
-    audit_trail: Optional[Any]
+    audit_trail: Any
 
     asset_id: int
     asset_function: str  # TODO: StrEnum

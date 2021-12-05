@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING, Optional
 
 
 if TYPE_CHECKING:
-    from sporepedia.api import SearchParams
-    from sporepedia.enums import SearchFilter
+    from .client import SearchParams
+    from .enums import SearchFilter
 
 
 class SearchRequestComposer():
