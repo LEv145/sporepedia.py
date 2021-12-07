@@ -3,8 +3,7 @@ from unittest.mock import patch
 
 import js2py.base
 
-from .constants import BASE_URL
-from .dwr_parser import parse_dwr
+from sporepedia.api.dwr_parser import parse_dwr
 from .models import (
     SearchServiceResult,
     Creation,
@@ -12,6 +11,7 @@ from .models import (
     AdventureStat,
     Status,
     StatusName,
+    Difficulty,
 )
 from .mockups import to_python__mockup
 
@@ -85,7 +85,7 @@ class SearchResponceBuilder():
             persona_id=raw_data["personaId"],
             name=raw_data["name"],
             screen_name=raw_data["screenName"],
-            avatar_image=f"{BASE_URL}/static/{raw_data['avatarImage']}",
+            avatar_image=f"https://www.spore.com/static/{raw_data['avatarImage']}",
             tagline=raw_data["tagline"],
             assets_count=raw_data["assetCount"],
             subscriptions_count=raw_data["subscriptionCount"],
@@ -109,7 +109,7 @@ class SearchResponceBuilder():
         return AdventureStat(
             id=raw_data["adventureId"],
             leaderboard_id=raw_data["adventureLeaderboardId"],
-            difficulty=raw_data["difficulty"],
+            difficulty=Difficulty(raw_data["difficulty"]),
             locked_captain_asset_id=raw_data["lockedCaptainAssetId"],
             plays_count=raw_data["totalPlays"],
             losses_count=raw_data["losses"],

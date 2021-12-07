@@ -5,6 +5,10 @@ description = "Unofficial API client for sporepedia (https://www.spore.com/spore
 authors = ["LEv145"]
 license = "MIT"
 
+packages = [
+    { include="sporepedia", from="." },
+]
+
 [tool.poetry.dependencies]
 python = ">=3.8,<3.10"
 aiohttp = "^3.8.1"
@@ -20,6 +24,8 @@ mkinit = "^0.3.3"
 black = "^21.11b1"
 pyinstaller = "^4.7"
 bson = "^0.5.10"
+coverage = "^6.2"
+tox = "^3.24.4"
 
 [tool.poetry.scripts]
 sporepedia = "sporepedia.__main__:cli"

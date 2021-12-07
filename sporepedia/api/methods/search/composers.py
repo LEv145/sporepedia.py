@@ -2,8 +2,10 @@ from typing import TYPE_CHECKING, Optional
 
 
 if TYPE_CHECKING:
-    from .client import SearchParams
-    from .enums import SearchFilter
+    from . import (
+        SearchParams,
+        SearchFilter,
+    )
 
 
 class SearchRequestComposer():

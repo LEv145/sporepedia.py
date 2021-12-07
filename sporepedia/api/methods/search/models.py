@@ -11,6 +11,14 @@ class StatusName(str, Enum):
     deleted = "DELETED"
 
 
+class Difficulty(int, Enum):
+    very_easy = 1
+    easy = 2
+    medium = 3
+    hard = 4
+    very_hard = 5
+
+
 @dataclass
 class Status():
     name: StatusName
@@ -47,7 +55,7 @@ class AdventureStat():
     id: int
     leaderboard_id: int
 
-    difficulty: int  # TODO: IntEnum
+    difficulty: Difficulty
     locked_captain_asset_id: Optional[int]
 
     plays_count: int
