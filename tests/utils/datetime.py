@@ -1,3 +1,4 @@
+# pragma: no cover
 from typing import Any, _SpecialForm
 from dataclasses import is_dataclass, Field
 

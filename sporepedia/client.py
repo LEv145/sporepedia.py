@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING, Optional, Type, TypeVar
 
 from .api import (
     APIClient,
-    SearchParams,
 )
 
 
@@ -11,9 +10,10 @@ if TYPE_CHECKING:
 
     from aiohttp import ClientSession
 
-    from .api import (
+    from api.methods.search import (
         SearchFilter,
         SearchServiceResult,
+        SearchParams,
     )
 
 
@@ -27,9 +27,10 @@ class SporepediaClient():
         self,
         text: str,
         lenght: int = 20,
-        params: SearchParams = SearchParams(),
+        params: Optional["SearchParams"] = None,
         filter: Optional["SearchFilter"] = None,
     ) -> "SearchServiceResult":
+
         result = await self._api.search(
             text=text,
             lenght=lenght,
