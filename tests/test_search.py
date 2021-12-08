@@ -30,7 +30,7 @@ from sporepedia.api.methods.search import (
 
 class SearchParamTest(unittest.TestCase):
 
-    def test_all(self):
+    def test__all(self):
         params = SearchParams(
             fields=FieldsSearchParam.all(),
             functions=FunctionsSearchParam.all(),
@@ -49,7 +49,7 @@ class SearchParamTest(unittest.TestCase):
             for name, _ in dataclass_.__dataclass_fields__.items():
                 self.assertEqual(getattr(dataclass_, name), True)
 
-    def test_none(self):
+    def test__none(self):
         params = SearchParams(
             fields=FieldsSearchParam.none(),
             functions=FunctionsSearchParam.none(),
@@ -71,7 +71,7 @@ class SearchParamTest(unittest.TestCase):
 
 class MethodsTest(unittest.IsolatedAsyncioTestCase):
     @patch.object(APIClient, "request")
-    async def test_search(self, mock_request: AsyncMock):
+    async def test__search(self, mock_request: AsyncMock):
         self._client = APIClient()
 
         with open(Path("./tests/testdata/dwr_search_testdata.js")) as fp:
@@ -201,7 +201,7 @@ class RequestComposerTest(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self._composer = SearchRequestComposer()
 
-    async def test_min_data(self):
+    async def test__min_data(self):
         result = self._composer.compose(
             text="Toster1",
             lenght=1,
@@ -234,7 +234,7 @@ modes:reference:c0-modes, filter:reference:c0-filter }
 batchId=3""",
         )
 
-    async def test_max_data(self):
+    async def test__max_data(self):
         result = self._composer.compose(
             text="Toster2",
             lenght=1,

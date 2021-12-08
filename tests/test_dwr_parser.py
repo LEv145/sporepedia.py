@@ -10,7 +10,7 @@ from sporepedia.api.dwr_parser import (
 
 class SporeDwrEngineParsersTest(unittest.TestCase):
 
-    def test_exception(self):
+    def test__exception(self):
         parser = SporeDwrEngineParser()
 
         with open(Path("./tests/testdata/dwr_exception.js")) as fp:
@@ -23,7 +23,7 @@ class SporeDwrEngineParsersTest(unittest.TestCase):
             self.assertEqual(cast(DwrParserError, error).message, "The specified call count is not a number")
             self.assertEqual(cast(DwrParserError, error).name, "org.directwebremoting.extend.ServerException")
 
-    def test_normal(self):
+    def test__normal(self):
         parser = SporeDwrEngineParser()
 
         with open(Path("./tests/testdata/dwr_search_testdata.js")) as fp:
