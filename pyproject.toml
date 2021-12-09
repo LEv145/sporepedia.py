@@ -16,6 +16,7 @@ dataclasses-json = "^0.5.6"
 asyncclick = "^8.0.1"
 anyio = "^3.4.0"
 Js2Py = "^0.71"
+quick = {git = "https://github.com/szsdk/quick"}
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"

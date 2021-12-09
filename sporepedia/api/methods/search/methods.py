@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, fields
+from dataclasses import Field, dataclass, fields
 from enum import Enum
 
 from .composers import SearchRequestComposer
@@ -47,7 +47,6 @@ class SearchMixin():
 
 
 class ABCSearchParam(ABC):
-
     @classmethod
     def all(cls):
         return cls(**{
