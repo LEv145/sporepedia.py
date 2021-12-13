@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import Any, Protocol
 
 from aiohttp import ClientResponse
 
@@ -8,8 +8,9 @@ class APIClientProtocol(Protocol):
         self,
         method: str,
         url: str,
-        *args, **kw,
+        **kwargs: Any,
     ) -> ClientResponse:
+        """Protocol for api client"""
         ...
 
 
