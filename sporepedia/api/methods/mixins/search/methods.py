@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional, TypeVar, Type
 from abc import ABC, abstractmethod
-from dataclasses import Field, dataclass, fields
+from dataclasses import dataclass, fields
 from enum import Enum
 
 from .composers import SearchRequestComposer
@@ -9,7 +9,7 @@ from .models import SearchServiceResult
 
 
 if TYPE_CHECKING:
-    from sporepedia.api.mixin_protocol import APIClientProtocol
+    from ...mixin_protocol import APIClientProtocol
 
 
 class SearchMixin():
@@ -47,15 +47,17 @@ class SearchMixin():
 
 
 class ABCSearchParam(ABC):
+    SearchParamType = TypeVar("SearchParamType", bound="ABCSearchParam")
+
     @classmethod
-    def all(cls):
+    def all(cls: Type[SearchParamType]) -> SearchParamType:
         return cls(**{
             field.name: True
             for field in fields(cls)
         })  # type: ignore
 
     @classmethod
-    def none(cls):
+    def none(cls: Type[SearchParamType]) -> SearchParamType:
         return cls(**{
             field.name: False
             for field in fields(cls)
@@ -80,7 +82,7 @@ class FieldsSearchParam(ABCSearchParam):
     is_tag: bool = False
     is_description: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         convert_data = (
             (self.is_name, "name"),
             (self.is_author, "author"),
@@ -120,7 +122,7 @@ class FunctionsSearchParam(ABCSearchParam):
     is_adv_story: bool = False
     is_adv_template: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         convert_data = (
             (self.is_creature, "CREATURE"),
             (self.is_tribe_creature, "TRIBE_CREATURE"),
@@ -160,7 +162,7 @@ class ModelsSearchParam(ABCSearchParam):
     is_air: bool = False
     is_water: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         convert_data = (
             (self.is_land, "LAND"),
             (self.is_air, "AIR"),
@@ -183,7 +185,7 @@ class PurposesSearchParam(ABCSearchParam):
     is_cultural: bool = False
     is_colony: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         convert_data = (
             (self.is_military, "MILITARY"),
             (self.is_economic, "ECONOMIC"),
@@ -207,23 +209,24 @@ class SearchParams():
     models: Optional["ModelsSearchParam"] = None
     purposes: Optional["PurposesSearchParam"] = None
 
-    def __post_init__(self):
-        self._fields = (
+    def __post_init__(self) -> None:
+        # TODO?: Better name
+        self.guaranteed_fields = (
             self.fields
             if self.fields is not None else
             FieldsSearchParam()
         )
-        self._functions = (
+        self.guaranteed_functions = (
             self.functions
             if self.functions is not None else
             FunctionsSearchParam()
         )
-        self._models = (
+        self.guaranteed_models = (
             self.models
             if self.models is not None else
             ModelsSearchParam()
         )
-        self._purposes = (
+        self.guaranteed_purposes = (
             self.purposes
             if self.purposes is not None else
             PurposesSearchParam()

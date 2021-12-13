@@ -9,12 +9,11 @@ from sporepedia.api.client import APIClient
 class SporepediaClientTest(unittest.IsolatedAsyncioTestCase):
     @patch.object(APIClient, "request")
     async def test__search(self, mock_request: AsyncMock):
-        client = SporepediaClient()
+        async with SporepediaClient() as client:
+            with open(Path("./tests/testdata/dwr_search_testdata.js")) as fp:
+                mock_request.return_value.text.return_value = fp.read()
 
-        with open(Path("./tests/testdata/dwr_search_testdata.js")) as fp:
-            mock_request.return_value.text.return_value = fp.read()
-
-        await client.search(text="Spore")
+            await client.search(text="Spore")
 
     async def test__close_exception(self):
         with self.assertRaises(ValueError):

@@ -1,9 +1,6 @@
-from typing import cast
-from unittest.mock import patch
+from typing import Any, Dict, List, cast
 
-import js2py.base
-
-from sporepedia.api.dwr_parser import parse_dwr
+from ...dwr_parser import parse_dwr
 from .models import (
     SearchServiceResult,
     Creation,
@@ -13,22 +10,16 @@ from .models import (
     StatusName,
     Difficulty,
 )
-from .mockups import to_python__mockup
 
 
 class SearchResponceBuilder():
     def build(self, raw_data: str) -> SearchServiceResult:
         js_object = parse_dwr(raw_data)
 
-        with patch.object(
-            js2py.base,
-            "to_python",
-            to_python__mockup,
-        ):
-            data = js_object.to_dict()
+        data = js_object.to_dict()
 
         result_size = cast(int, data["resultSize"])
-        raw_results = cast(list, data["results"])
+        raw_results = cast(List[Dict[str, Any]], data["results"])
 
         return SearchServiceResult(
             result_size=result_size,
@@ -38,7 +29,7 @@ class SearchResponceBuilder():
             ]
         )
 
-    def build_creation(self, raw_data: dict) -> Creation:  # TODO?: Use cast for typing
+    def build_creation(self, raw_data: Dict[str, Any]) -> Creation:
         return Creation(
             id=raw_data["id"],
             original_id=raw_data["originalId"],
@@ -77,7 +68,7 @@ class SearchResponceBuilder():
             status=self.build_status(raw_data["status"]),
         )
 
-    def build_author(self, raw_data: dict) -> Author:
+    def build_author(self, raw_data: Dict[str, Any]) -> Author:
         return Author(
             id=raw_data["id"],
             user_id=raw_data["userId"],
@@ -105,7 +96,7 @@ class SearchResponceBuilder():
             newest_asset_create_at=raw_data["newestAssetCreated"],
         )
 
-    def build_adventure_stat(self, raw_data: dict) -> AdventureStat:
+    def build_adventure_stat(self, raw_data: Dict[str, Any]) -> AdventureStat:
         return AdventureStat(
             id=raw_data["adventureId"],
             leaderboard_id=raw_data["adventureLeaderboardId"],
@@ -118,7 +109,7 @@ class SearchResponceBuilder():
             update_at=raw_data["updated"],
         )
 
-    def build_status(self, raw_data: dict) -> Status:
+    def build_status(self, raw_data: Dict[str, Any]) -> Status:
         return Status(
             name=StatusName(raw_data["name"]),
             name_key=raw_data["nameKey"],

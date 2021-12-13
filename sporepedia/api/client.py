@@ -1,4 +1,4 @@
-from typing import Optional, Type, TypeVar
+from typing import Any, Optional, Type, TypeVar
 from types import TracebackType
 
 import aiohttp
@@ -17,11 +17,11 @@ class APIClient(SearchMixin):
     def __init__(self) -> None:
         self._session: Optional[aiohttp.ClientSession] = None
 
-    async def request(  # TODO?: New name, strange
+    async def request(
         self,
         method: str,
         url: str,
-        *args, **kw,
+        **kwargs: Any,
     ) -> aiohttp.ClientResponse:
         if self._session is None:
             raise ValueError("Session is not exist")
@@ -29,7 +29,7 @@ class APIClient(SearchMixin):
         response = await self._session.request(
             url=url,
             method=method,
-            *args, **kw,
+            **kwargs,
         )
         response.raise_for_status()
         return response

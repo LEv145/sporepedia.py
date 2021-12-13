@@ -10,3 +10,5 @@ exclude_lines =
     if __name__ == .__main__.:
     pragma: no cover
     if TYPE_CHECKING:
+    ...
+    pass

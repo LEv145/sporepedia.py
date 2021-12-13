@@ -8,7 +8,7 @@ from tests.utils.datetime import validate_dataclass
 from tests.utils.json import json_datetime_hook
 
 from sporepedia.api.client import APIClient
-from sporepedia.api.methods.search import (
+from sporepedia.api.methods.mixins.search import (
     SearchResponceBuilder,
     SearchRequestComposer,
     SearchParams,
@@ -39,10 +39,10 @@ class SearchParamTest(unittest.TestCase):
         )
 
         dataclasses = (
-            params._fields,
-            params._functions,
-            params._models,
-            params._purposes,
+            params.guaranteed_fields,
+            params.guaranteed_functions,
+            params.guaranteed_models,
+            params.guaranteed_purposes,
         )
 
         for dataclass_ in dataclasses:
@@ -58,10 +58,10 @@ class SearchParamTest(unittest.TestCase):
         )
 
         dataclasses = (
-            params._fields,
-            params._functions,
-            params._models,
-            params._purposes,
+            params.guaranteed_fields,
+            params.guaranteed_functions,
+            params.guaranteed_models,
+            params.guaranteed_purposes,
         )
 
         for dataclass_ in dataclasses:

@@ -3,6 +3,8 @@ from typing import Any, List, Optional, Union
 from datetime import datetime
 from dataclasses import dataclass
 
+from dataclasses_json import DataClassJsonMixin
+
 
 class StatusName(str, Enum):
     classified = "CLASSIFIED"
@@ -20,14 +22,14 @@ class Difficulty(int, Enum):
 
 
 @dataclass
-class Status():
+class Status(DataClassJsonMixin):
     name: StatusName
     name_key: str
     declaring_class_name: str
 
 
 @dataclass
-class Author():
+class Author(DataClassJsonMixin):
     id: int
     user_id: int
     nucleus_user_id: int
@@ -51,7 +53,7 @@ class Author():
 
 
 @dataclass
-class AdventureStat():
+class AdventureStat(DataClassJsonMixin):
     id: int
     leaderboard_id: int
 
@@ -67,7 +69,7 @@ class AdventureStat():
 
 
 @dataclass
-class Creation():
+class Creation(DataClassJsonMixin):
     id: int
     original_id: Optional[int]
     parent_id: Optional[int]
@@ -100,6 +102,6 @@ class Creation():
 
 
 @dataclass
-class SearchServiceResult():
+class SearchServiceResult(DataClassJsonMixin):
     result_size: int
     results: List[Creation]

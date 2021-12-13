@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
     from aiohttp import ClientSession
 
-    from api.methods.search import (
+    from .api import (
         SearchFilter,
         SearchServiceResult,
         SearchParams,
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 class SporepediaClient():
     SporepediaClientType = TypeVar("SporepediaClientType", bound="SporepediaClient")
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._api = APIClient()
 
     async def search(
@@ -35,7 +35,7 @@ class SporepediaClient():
             text=text,
             lenght=lenght,
             params=params,
-            filter=filter
+            filter=filter,
         )
         return result
 
