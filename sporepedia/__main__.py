@@ -88,6 +88,10 @@ async def cli() -> None:
     type=str,
 )
 @click.option(
+    "-L", "--lenght",
+    type=int
+)
+@click.option(
     "-Fu", "--functions",
     type=BoolDataclassType(FunctionsSearchParam),
 )
@@ -109,6 +113,7 @@ async def cli() -> None:
 )
 async def search(
     text: str,
+    lenght: int,
     functions: Optional[FunctionsSearchParam],
     fields: Optional[FieldsSearchParam],
     models: Optional[ModelsSearchParam],
@@ -117,7 +122,8 @@ async def search(
 ) -> None:
     async with _client as client:
         result = await client.search(
-            text,
+            text=text,
+            lenght=lenght,
             params=SearchParams(
                 functions=functions,
                 fields=fields,

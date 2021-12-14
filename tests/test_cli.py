@@ -111,9 +111,14 @@ class TestCommands(unittest.IsolatedAsyncioTestCase):
                 (
                     "search",
                     "test",
-                    "-Fu", "IS_CREATURE, is_civ_creature",
+                    "--lenght", "10",
+                    "-Fu", "is_creature,is_tribe_creature,is_civ_creature,\
+                        is_space_creature,is_adventure_creature,is_city_hall,is_house,\
+                        is_industry,is_entertainment,is_ufo,is_adv_attack,is_adv_collect,\
+                        is_adv_defend,is_adv_explore,is_adv_unset,is_adv_puzzle,is_adv_quest,\
+                        is_adv_socialize,is_adv_story,is_adv_template,",
                     "-F", "most_popular_new",
-                    "--fields", "is_author,is_description",
+                    "--fields", "is_name,is_author,is_tag,is_description",
                     "-P", "is_colony",
                 )
             )
