@@ -1,6 +1,5 @@
 # sporepedia.py
-Unofficial API client for sporepedia (https://www.spore.com/sporepedia)
-
+A unofficial wrapper for the Sporepedia API (https://www.spore.com/sporepedia) for Python (But нщг can be used from any other language)
 
 # How to use
 ```
