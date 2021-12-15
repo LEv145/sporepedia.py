@@ -2,7 +2,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A unofficial wrapper for the Sporepedia API (https://www.spore.com/sporepedia) for Python (But нщг can be used from any other language)
+A unofficial wrapper for the Sporepedia API (https://www.spore.com/sporepedia) on Python (But нщг can be used from any other language)
 
 # How to use
 ```
